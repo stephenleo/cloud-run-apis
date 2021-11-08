@@ -31,22 +31,21 @@ def predict(names: List[str]):
     pred_df = pd.DataFrame({"name": names})
 
     # Preprocess
-    pred_df = preprocess(pred_df, train=False)
+    pred_df = preprocess(pred_df)
 
     # Predictions
     result = pred_model.predict(np.asarray(pred_df["name"].values.tolist())).squeeze(
         axis=1
     )
-    pred_df["Boy or Girl?"] = ["Boy" if logit > 0.5 else "Girl" for logit in result]
-    pred_df["Probability"] = [logit if logit > 0.5 else 1.0 - logit for logit in result]
+    pred_df["boy_or_girl"] = ["boy" if logit > 0.5 else "girl" for logit in result]
+    pred_df["probability"] = [logit if logit > 0.5 else 1.0 - logit for logit in result]
 
     # Format the output
     pred_df["name"] = names
-    pred_df.rename(columns={"name": "Name"}, inplace=True)
-    pred_df["Probability"] = pred_df["Probability"].round(2)
+    pred_df["probability"] = pred_df["probability"].round(2)
     pred_df.drop_duplicates(inplace=True)
 
-    return {"response": pred_df.to_json(orient="records")}
+    return {"response": pred_df.to_dict(orient="records")}
 
 
 if __name__ == "__main__":

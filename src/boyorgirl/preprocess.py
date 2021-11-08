@@ -1,4 +1,4 @@
-def preprocess(names_df, train=True):
+def preprocess(names_df):
     # Step 1: Lowercase
     names_df["name"] = names_df["name"].str.lower()
 
@@ -15,11 +15,5 @@ def preprocess(names_df, train=True):
     names_df["name"] = [
         [max(0.0, ord(char) - 96.0) for char in name] for name in names_df["name"]
     ]
-
-    if train:
-        # Step 5: Encode Gender to Numbers
-        names_df["gender"] = [
-            0.0 if gender == "F" else 1.0 for gender in names_df["gender"]
-        ]
 
     return names_df
