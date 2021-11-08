@@ -46,7 +46,7 @@ def predict(names: List[str]):
     pred_df["Probability"] = pred_df["Probability"].round(2)
     pred_df.drop_duplicates(inplace=True)
 
-    return pred_df.to_json(orient="records")
+    return {"response": pred_df.to_json(orient="records")}
 
 
 if __name__ == "__main__":
