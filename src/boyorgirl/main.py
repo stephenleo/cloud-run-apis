@@ -21,26 +21,32 @@ app = FastAPI()
 # Predict endpoint
 @app.post("/predict")
 def predict(names: List[str]):
+    # Step 1: Input is a list of names
     logger.info(names)
 
-    # Split on all non-alphabet characters
+    # Step 2: Split on all non-alphabet characters
     split_names = [re.findall(r"\w+", name) for name in names]
     names = [item for sublist in split_names for item in sublist]
+
+    # Step 3: Keep only first 10 names
+    names = names[:10]
 
     # Convert to dataframe
     pred_df = pd.DataFrame({"name": names})
 
-    # Preprocess
+    # Step 4: Preprocess the names
     pred_df = preprocess(pred_df)
 
-    # Predictions
+    # Step 5: Run predictions
     result = pred_model.predict(np.asarray(pred_df["name"].values.tolist())).squeeze(
         axis=1
     )
+
+    # Step 6: Convert the probabilities to predictions
     pred_df["boy_or_girl"] = ["boy" if logit > 0.5 else "girl" for logit in result]
     pred_df["probability"] = [logit if logit > 0.5 else 1.0 - logit for logit in result]
 
-    # Format the output
+    # Step 7: Format the output
     pred_df["name"] = names
     pred_df["probability"] = pred_df["probability"].round(2)
     pred_df.drop_duplicates(inplace=True)

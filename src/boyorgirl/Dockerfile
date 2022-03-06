@@ -10,9 +10,6 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-# For local debug only
-# ENV PORT 8080
-
 # Install production dependencies.
 RUN pip install --no-cache-dir -r requirements.txt
 
