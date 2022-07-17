@@ -1,10 +1,10 @@
 on:
-  workflow_dispatch:
   push:
     branches:
-      - master
+      - 'master'
     paths:
-      - src/boyorgirl
+      - 'src/boyorgirl/**''
+  workflow_dispatch:
 
 name: Deploy BoyorGirl
 env:
