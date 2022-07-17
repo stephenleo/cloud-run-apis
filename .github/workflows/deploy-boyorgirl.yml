@@ -11,7 +11,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT }}
   SERVICE: boyorgirl
   REGION: us-west1
-  PATH: src/boyorgirl
+  PROJECT_PATH: src/boyorgirl
 
 jobs:
   deploy:
@@ -42,7 +42,7 @@ jobs:
 
     - name: Build and Push Container
       run: |-
-        docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} ${{ env.PATH }}
+        docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} ${{ env.PROJECT_PATH }}
         docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
     - name: Deploy to Cloud Run
       run: |-
