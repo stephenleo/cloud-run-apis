@@ -20,6 +20,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
 CMD exec gunicorn -k uvicorn.workers.UvicornWorker --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
 
-
 # docker build -t boy_or_girl:latest .
 # docker run -p 8080:8080 boy_or_girl 
