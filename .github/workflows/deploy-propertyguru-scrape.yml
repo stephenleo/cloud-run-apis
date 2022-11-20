@@ -1,0 +1,53 @@
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'src/propertyguru-scrape/**'
+  workflow_dispatch:
+
+name: Deploy PropertyGuru Scrap
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+  SERVICE: propertyguru-scrape
+  REGION: asia-southeast1
+  PROJECT_PATH: src/propertyguru-scrape
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    # Alternative option - authentication via credentials json
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    # Setup gcloud CLI
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+
+    - name: Authorize Docker push
+      run: gcloud auth configure-docker
+
+    - name: Build Selenium Base
+      run: |-
+        docker build -t seleniumbase ${{ env.PROJECT_PATH }}/SeleniumBase
+
+    - name: Deploy to Cloud Run
+      run: |-
+        gcloud run deploy ${{ env.SERVICE }} \
+          --region ${{ env.REGION }} \
+          --source .

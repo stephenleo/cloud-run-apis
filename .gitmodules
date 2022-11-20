@@ -1,0 +1,3 @@
+[submodule "src/propertyguru-scrape/SeleniumBase"]
+	path = src/propertyguru-scrape/SeleniumBase
+	url = https://github.com/seleniumbase/SeleniumBase.git
